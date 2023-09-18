@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 }
+
+body{
+  background-color: #020918;
+}
+
+button{
+  background-color: #1B2430;
+  border-radius: 10px;
+  color: #816797;
+  padding: 0.5rem;
+  border-color: #816797;
+  border-width: 4px;
+  box-shadow: none;
+  font-weight: bold;
+}
