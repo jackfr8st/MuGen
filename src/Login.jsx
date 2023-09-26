@@ -1,7 +1,7 @@
 import React from "react";
 import {useState} from "react";
 import { getAuth, createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut   } from "firebase/auth";
-import "./App.css";
+import "./login.css";
 import { useNavigate } from "react-router-dom";
 
 
@@ -28,6 +28,8 @@ function LoginPage() {
 
     // console.log(event.target.value);
   }
+  const [showRegister, setShowRegister] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
 
   function handleRChange(event) {
     const { type, name, value } = event.target;
@@ -72,8 +74,8 @@ createUserWithEmailAndPassword(auth, Register.username, Register.password)
     newUserInfo.complect("Successfully Created");
     newUserInfo.isSignIn=true;
     newUserInfo.error="";
-    setSignIn(true);
-    navigate('/mugen');
+    setShowRegister(false);
+    setShowMessage(true);
     // ...
   })
   .catch((error) => {
@@ -81,6 +83,7 @@ createUserWithEmailAndPassword(auth, Register.username, Register.password)
     const errorMessage = error.message;
     // ..
   });
+  navigate('/mugen');
   }
   const handleSignout = () => {
     const auth = getAuth();
@@ -95,63 +98,176 @@ createUserWithEmailAndPassword(auth, Register.username, Register.password)
 
 
   return (
-    <div style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
-      {!signin && <div><div>Login</div>
-      <div><form onSubmit={handleSubmit}>
-    <input
-      type="text"
-      placeholder="Email"
-      name="username"
-      id="usName"
-      onChange={handleChange}
-      value={Login.username}
-    />
+  //   <div style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+  //     {!signin && <div><div>Login</div>
+  //     <div><form onSubmit={handleSubmit}>
+  //   <input
+  //     type="text"
+  //     placeholder="Email"
+  //     name="username"
+  //     id="usName"
+  //     onChange={handleChange}
+  //     value={Login.username}
+  //   />
 
-    <input
-      type="password"
-      placeholder="Password"
-      name="password"
-      onChange={handleChange}
-      value={Login.password}
-    />
+  //   <input
+  //     type="password"
+  //     placeholder="Password"
+  //     name="password"
+  //     onChange={handleChange}
+  //     value={Login.password}
+  //   />
 
-    <button type="submit" className="form-button">
-      Submit
-    </button>
-  </form></div>
-  <div>Register</div>
-  <div><form onSubmit={handleRegisterSubmit}>
-    <input
-      type="text"
-      placeholder="Email"
-      name="username"
-      id="usName"
-      onChange={handleRChange}
-      value={Register.username}
-    />
+  //   <button type="submit" className="form-button">
+  //     Submit
+  //   </button>
+  // </form></div>
+  // <div>Register</div>
+  // <div><form onSubmit={handleRegisterSubmit}>
+  //   <input
+  //     type="text"
+  //     placeholder="Email"
+  //     name="username"
+  //     id="usName"
+  //     onChange={handleRChange}
+  //     value={Register.username}
+  //   />
 
-    <input
-      type="password"
-      placeholder="Password"
-      name="password"
-      onChange={handleRChange}
-      value={Register.password}
-    />
+  //   <input
+  //     type="password"
+  //     placeholder="Password"
+  //     name="password"
+  //     onChange={handleRChange}
+  //     value={Register.password}
+  //   />
 
-    <button type="submit" className="form-button">
-      Submit
-    </button>
-  </form></div></div>}
-      {/* <div>
-        <button onClick={loginWithGoogle}>Login with Google</button>
-      </div> */}
-      {signin && <div>
-        <div>Signed In Successfully</div>
-       <div>
-        <button onClick={handleSignout}>Sign Out</button>
-      </div> 
-      </div>}
-      {signout && <div>Signed Out Successfully</div>}
+  //   <button type="submit" className="form-button">
+  //     Submit
+  //   </button>
+  // </form></div></div>}
+  //     {/* <div>
+  //       <button onClick={loginWithGoogle}>Login with Google</button>
+  //     </div> */}
+  //     {signin && <div>
+  //       <div>Signed In Successfully</div>
+  //      <div>
+  //       <button onClick={handleSignout}>Sign Out</button>
+  //     </div> 
+  //     </div>}
+  //     {signout && <div>Signed Out Successfully</div>}
+  // </div>
+  <div style={{display:'flex',justifyContent:'center',alignItems:'center',marginTop:'13rem'}}>
+    {!showRegister && <div class="wrapper">
+        <form onSubmit={handleSubmit}>
+            <h1>
+                Login
+            </h1>
+
+            <div class="inputbox">
+                {/* <input 
+                type="text" placeholder="Email" required
+                onChange={handleChange}
+                value={Login.username}
+                /> */}
+                   <input
+                      type="text"
+                      placeholder="Email"
+                      name="username"
+                      id="usName"
+                      onChange={handleChange}
+                      value={Login.username}
+                    />
+
+
+                
+            </div>
+
+            <div class="inputbox">
+            <input
+              type="password"
+              placeholder="Password"
+              name="password"
+              onChange={handleChange}
+              value={Login.password}
+            />
+            </div>
+
+            {/* <div class="forgot">
+                <label> <input
+                type="checkbox"/>Remember me</label>
+                <a href="forgot.html">Forgot Password</a>
+            </div> */}
+            <button type="submit" class="btn">
+                Login
+            </button>
+
+           {!showMessage && <div class="Register" style={{display:'flex',flexDirection:'column'}}>
+            <label>
+                Dont have a Account?
+            </label>
+            <div style={{marginTop:'1rem'}}>
+              <button onClick={()=>setShowRegister(true)} style={{cursor:'pointer',color:'rgb(255, 89, 0)',borderColor:'rgb(255, 89, 0)'}}>Register</button>
+            </div>
+            </div>}
+            {showMessage && <div>Registered Successfully</div>}
+
+        </form>
+    </div>}
+    {showRegister && <div class="wrapper">
+        <form onSubmit={handleRegisterSubmit}>
+            <h1>
+                Register
+            </h1>
+
+            <div class="inputbox">
+                {/* <input 
+                type="text" placeholder="Email" required
+                onChange={handleChange}
+                value={Login.username}
+                /> */}
+                   <input
+                      type="text"
+                      placeholder="Email"
+                      name="username"
+                      id="usName"
+                      onChange={handleRChange}
+                      value={Register.username}
+                    />
+
+
+                
+            </div>
+
+            <div class="inputbox">
+            <input
+              type="password"
+              placeholder="Password"
+              name="password"
+              onChange={handleRChange}
+              value={Register.password}
+            />
+            </div>
+
+            {/* <div class="forgot">
+                <label> <input
+                type="checkbox"/>Remember me</label>
+                <a href="forgot.html">Forgot Password</a>
+            </div> */}
+            <button type="submit" class="btn">
+                Register
+            </button>
+
+            <div class="Register" style={{display:'flex',flexDirection:'column'}}>
+            <label>
+                Already have an Account?
+            </label>
+            <div style={{marginTop:'1rem'}}>
+              <button onClick={()=>setShowRegister(false)} style={{cursor:'pointer',color:'rgb(255, 89, 0)',borderColor:'rgb(255, 89, 0)'}}>Login</button>
+            </div>
+            </div>
+
+        </form>
+    </div>}
   </div>
   );
 }

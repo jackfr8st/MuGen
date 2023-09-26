@@ -1,0 +1,122 @@
+/* body {
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    justify-content: center;
+    margin-top: 140px;
+    
+} */
+
+.wrapper {
+    background: rgba(0, 0, 0, .8);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(5px);
+    color: white;
+    width: 300px;
+    border-radius: 40px;
+    padding: 30px;
+}
+
+.wrapper h1 {
+    font-size: 36px;
+    text-align: center;
+    margin: 5 0 0 0;
+}
+
+.wrapper .inputbox {
+    width: 100%;
+    height: 50px;
+    margin: 30px 0;
+}
+
+.inputbox input {
+    height: 100%;
+    width: 90%;
+    margin: 5px 0 0 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    border: 2px solid rgba(255, 255, 255, .2);
+    border-radius: 40px;
+    color: white; 
+    padding-left: 20px;
+}
+
+.inputbox input::placeholder {
+    color: white;
+    padding: 0px;
+}
+
+.inputbox i {
+    display: flex;
+    justify-content: center;
+    margin-left: 80%;
+    transform: translateY(-180%);
+    font-size: 20px;
+}
+
+.wrapper .forgot {
+    display: flex;
+    justify-content: space-between;
+}
+
+.forgot {
+    margin: 10px;
+    margin-top: 2px;
+    margin-bottom: 15px;
+}
+
+.forgot label input {
+    accent-color: white;
+}
+
+.forgot a {
+    text-decoration: none;
+    color: white;
+}
+
+.forgot a:hover{
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.wrapper .btn {
+    width: 90%;
+    height: 40px;
+    margin-left: 5%;
+    border-radius: 20px;
+    border: none;
+    color: rgb(255, 89, 0);
+    font-weight: 600;
+}
+
+.btn:hover{
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(191, 25, 0, 0.768);
+}
+
+.btn :active {
+    box-shadow: 0 0 10px rgba(191, 25, 0, 0.768);
+}
+
+.wrapper .Register {
+    display: flex;
+    text-align: center;
+    justify-content: space-evenly;
+    margin-right: 40px;
+    margin-left: 40px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-size: 12px;
+}
+
+.Register a {
+    margin-left: -8%;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+}
+
+.Register a:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}

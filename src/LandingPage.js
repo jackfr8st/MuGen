@@ -14,7 +14,7 @@ function LandingPage() {
 
   return (
     <div>
-        <Parallax pages={5}>
+        <Parallax pages={3}>
             <ParallaxLayer sticky={{start:0,end:3}}>
                 <div style={{
                     display:'flex',
