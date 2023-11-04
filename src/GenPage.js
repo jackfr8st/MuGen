@@ -1,6 +1,10 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState } from "react";
+import { useState,useEffect,useRef } from "react";
+import { ReactDOM } from "react";
+import { Visualizer } from 'react-sound-visualizer';
+import MidiPlayer from 'react-midi-player';
+
 import "./App.css";
 import AudioPlayer from "react-audio-player";
 import path1 from "./assets/midi/1.wav";
@@ -16,6 +20,7 @@ import path10 from "./assets/midi/10.wav";
 import path11 from "./assets/midi/11.wav";
 import path12 from "./assets/midi/12.wav";
 import path13 from "./assets/midi/13.wav";
+import midipath from "./assets/midi/103.midi";
 
 function GenPage() {
   const [playing, setPlaying] = useState(false);
@@ -25,21 +30,7 @@ function GenPage() {
     setIsPlaying(!isPlaying);
   };
 
-  const Images = [
-    path1,
-    path2,
-    path3,
-    path4,
-    path5,
-    path6,
-    path7,
-    path8,
-    path9,
-    path10,
-    path11,
-    path12,
-    path13,
-  ];
+  const Images = [path1,path2,path3,path4,path5,path6,path7,path8,path9,path10,path11,path12,path13];
 
   const [path, setPath] = useState("");
 
@@ -48,6 +39,175 @@ function GenPage() {
     const rIndex = Math.floor(Math.random() * Images.length);
     setPath(Images[rIndex]);
   };
+  // const [audio, setAudio] = useState<MediaStream | null>(null);
+
+  // useEffect(() => {
+  //   navigator.mediaDevices
+  //     .getUserMedia({
+  //       audio: true,
+  //       video: false,
+  //     })
+  //     .then(setAudio);
+  // }, []);
+
+
+
+
+    const 
+      canvasRef = useRef(null),
+      buttonRef = useRef(null);
+  
+    const audioVisualizerLogic = () => {
+      const 
+        context = new (window.AudioContext || window.webkitAudioContext)(),
+        source = context.createBufferSource();
+      
+      //fetch remote audio source
+      fetch("https://jplayer.org/audio/mp3/RioMez-01-Sleep_together.mp3")
+        .then((response) => response.arrayBuffer())
+        .then((response) => {
+          context.decodeAudioData(response, (buffer) => {
+            source.buffer = buffer;
+            source.connect(context.destination);
+            // auto play
+            source.start(0);
+          });
+        });
+  
+      const 
+        audio = new Audio(source),
+        canvas = canvasRef.current,
+        muteButton = buttonRef.current;
+  
+      //mute or play on click
+      const mutePlay = () => {
+        context.state === "running" ? context.suspend() : context.resume();
+      };
+      muteButton.onclick = () => mutePlay();
+  
+      //config canvas
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const ctx = canvas.getContext("2d");
+  
+      //config audio analyzer
+      const analyser = context.createAnalyser();
+      source.connect(analyser);
+      analyser.connect(context.destination);
+      analyser.fftSize = 256;
+      const bufferLength = analyser.frequencyBinCount,
+        dataArray = new Uint8Array(bufferLength),
+        WIDTH = canvas.width,
+        HEIGHT = canvas.height,
+        barWidth = (WIDTH / bufferLength) * 2.5;
+      let barHeight = null,
+        x = null;
+  
+      //core logic for the visualizer
+      const timeouts = [];
+      const renderFrame = () => {
+        ctx.fillStyle = "rgba(0,0,0,0)";
+        requestAnimationFrame(renderFrame);
+        x = 0;
+        analyser.getByteFrequencyData(dataArray);
+        ctx.fillRect(0, 0, WIDTH, HEIGHT);
+  
+        for (let i = 0; i < bufferLength; i++) {
+          //color based upon frequency
+          barHeight = dataArray[i];
+          let 
+            r = barHeight *1,
+            g = 0,
+            b = barHeight * 4.5;
+          ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
+          ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
+          x += barWidth + 1;
+          
+          //Allows visualizer to overlay on a background/video by clearing the rects after painting.
+          let timer = setTimeout(() => {
+            ctx.clearRect(0, 0, WIDTH, HEIGHT);
+          }, 50);
+          timeouts.push(timer);
+        }
+      };
+      //Clears the accumulating timeouts.
+      setTimeout(() => {
+        for (let i = 0; i < timeouts.length; i++) {
+          return clearTimeout(timeouts[i]);
+        }
+      }, 51);
+      renderFrame();
+    };
+  
+    //connect audio visualizer to DOM and execute logic
+    useEffect(() => {
+      audioVisualizerLogic();
+    }, []);
+            
+
+
+//test
+  //   const canvasRef = useRef(null);
+  //   const buttonRef = useRef(null);
+  //   const audioVisualizerLogic = () => {
+  //   const context = new (window.AudioContext || window.webkitAudioContext)();
+  //   const canvas = canvasRef.current;
+  //   const muteButton = buttonRef.current;
+  //   const ctx = canvas.getContext("2d");
+
+  //   // MIDI.js is a library for working with MIDI files
+  //   // You can install it via npm or include it in your HTML
+  //   const MIDI = require("midi.js");
+
+  //   // Load the MIDI file from a local path
+  //   MIDI.Player.loadFile("./assets/midi/103.midi", function() {
+  //     // When the MIDI file is loaded, set up the audio visualization logic
+  //     const analyser = context.createAnalyser();
+  //     analyser.connect(context.destination);
+  //     analyser.fftSize = 256;
+  //     const bufferLength = analyser.frequencyBinCount;
+  //     const dataArray = new Uint8Array(bufferLength);
+  //     const WIDTH = canvas.width;
+  //     const HEIGHT = canvas.height;
+  //     const barWidth = (WIDTH / bufferLength) * 2.5;
+  //     let x = null;
+
+  //     const renderFrame = () => {
+  //       ctx.fillStyle = "rgba(0, 0, 0, 0)";
+  //       requestAnimationFrame(renderFrame);
+  //       x = 0;
+  //       analyser.getByteFrequencyData(dataArray);
+  //       ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+  //       for (let i = 0; i < bufferLength; i++) {
+  //         // Color based upon frequency
+  //         const barHeight = dataArray[i];
+  //         const r = barHeight + 22 * (i / bufferLength);
+  //         const g = 333 * (i / bufferLength);
+  //         const b = 47;
+  //         ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
+  //         ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
+  //         x += barWidth + 1;
+  //       }
+  //     };
+
+  //     renderFrame();
+
+  //     // When you click the button, start or stop MIDI playback
+  //     muteButton.onclick = () => {
+  //       if (MIDI.Player.playing) {
+  //         MIDI.Player.stop();
+  //       } else {
+  //         MIDI.Player.start();
+  //       }
+  //     };
+  //   });
+  // };
+
+  // useEffect(() => {
+  //   audioVisualizerLogic();
+  // }, []);
+
 
   return (
     <div
@@ -125,7 +285,8 @@ function GenPage() {
               {/* <button onClick={togglePlay}>
                 {isPlaying ? "Pause" : "Play"}
               </button> */}
-              <AudioPlayer src={path} autoPlay={isPlaying} controls />
+              {/* <AudioPlayer src={midipath} autoPlay={isPlaying} controls style={{backgroundColor:'black'}} /> */}
+              <MidiPlayer src={midipath} />
               <button onClick={getRImage} style={{ marginTop: "1.5rem" }}>
                 Generate
               </button>
@@ -133,6 +294,21 @@ function GenPage() {
           </div>
         )}
       </div>
+      <button className="contextButton" ref={buttonRef}>Play Music</button>
+            <canvas ref={canvasRef} className="canvas"></canvas>
+            {/* <Visualizer audio={audio}>
+        {({ canvasRef, stop, start, reset }) => (
+          <>
+            <canvas ref={canvasRef} width={500} height={100} />
+
+            <div>
+              <button onClick={start}>Start</button>
+              <button onClick={stop}>Stop</button>
+              <button onClick={reset}>Reset</button>
+            </div>
+          </>
+        )}
+      </Visualizer> */}
     </div>
   );
 }
