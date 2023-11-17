@@ -27,7 +27,7 @@ const context = new (window.AudioContext || window.webkitAudioContext)(),
   source = context.createBufferSource();
 
 function GenPage() {
-  const [playing, setPlaying] = useState(false);
+  const [playing, setPlaying] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false); //loading spinner states
 
@@ -62,23 +62,23 @@ function GenPage() {
 
   const getRImage = () => {
     setIsLoading(true);
-    setPlaying(false);
+    setPlaying(2);
     fetch("http://localhost:10000/runmodel", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
         genInfo: {
-          duration: duration,
+          duration: 10,
           genre: genre,
         },
       }),
     })
       .then((response) => response.arrayBuffer())
       .then((response) => {
-        setIsLoading(false);
-        setPlaying(true);
-        console.log(response);
         setPath(response);
+        setIsLoading(false);
+        console.log(response);
+        // setPlaying(2);
         //  context.decodeAudioData(response, (buffer) => {
         //   source.buffer = buffer;
         //   source.connect(context.destination);
@@ -191,6 +191,10 @@ function GenPage() {
         marginTop: "13rem",
       }}
     >
+      {isLoading && <div style={{display:"flex",alignItems:'center',justifyContent:'center',backgroundColor:'rgba(0,0,0,0.7)',width:'100%',height:'120%',position:'absolute',zIndex:'5'}}>
+          <LoadingScreen />
+        </div>
+           }
       <div
         style={{
           display: "flex",
@@ -201,7 +205,7 @@ function GenPage() {
           borderRadius: "2rem",
         }}
       >
-        {!playing && (
+        {playing==0 && (
           <div>
             <div style={{ fontSize: "2rem", marginBottom: "1rem" }}>
               Generate Music
@@ -221,7 +225,7 @@ function GenPage() {
                   <option value={2}>Jazz</option>
                 </select>
               </div>
-              <div>
+              {/* <div>
                 <div style={{ marginBottom: "1rem" }}>
                   Enter Duration of music in Seconds
                 </div>
@@ -230,7 +234,7 @@ function GenPage() {
                   type="number"
                   max={100}
                 />
-              </div>
+              </div> */}
             </div>
             <div
               style={{
@@ -262,10 +266,14 @@ function GenPage() {
             </div>
           </div>
         )}
+{/* 
+        {playing==2 && <div style={{display:"flex",alignItems:'center',justifyContent:'center'}}>
+          <LoadingScreen />
+        </div>
+           } */}
+          
 
-        {isLoading && <LoadingScreen />}
-
-        {playing && (
+        {playing==2 && (
           <div>
             <div
               style={{
