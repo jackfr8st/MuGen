@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { ReactDOM } from "react";
 import { Visualizer } from "react-sound-visualizer";
 import MidiPlayer from "react-midi-player";
+import LoadingScreen from "./LoadingScreen";
 
 import "./App.css";
 import AudioPlayer from "react-audio-player";
@@ -23,11 +24,12 @@ import path13 from "./assets/midi/13.wav";
 import midipath from "./assets/midi/103.midi";
 
 const context = new (window.AudioContext || window.webkitAudioContext)(),
-source = context.createBufferSource();
+  source = context.createBufferSource();
 
 function GenPage() {
   const [playing, setPlaying] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); //loading spinner states
 
   const togglePlay = () => {
     setIsPlaying(!isPlaying);
@@ -50,40 +52,43 @@ function GenPage() {
   ];
 
   const [path, setPath] = useState("");
-  const [genre,setGenre] = useState(0);
-  const [duration,setDuration] = useState(10);
+  const [genre, setGenre] = useState(0);
+  const [duration, setDuration] = useState(10);
 
-  const onValueChange = (e) =>{
-    setDuration(e.target.value)
+  const onValueChange = (e) => {
+    setDuration(e.target.value);
     console.log(duration);
-  }
+  };
 
   const getRImage = () => {
-    setPlaying(true);
+    setIsLoading(true);
+    setPlaying(false);
     fetch("http://localhost:10000/runmodel", {
       method: "POST",
-      headers: {'content-type': 'application/json'},
+      headers: { "content-type": "application/json" },
       body: JSON.stringify({
-        genInfo:{
-          duration:duration,
-          genre:genre
-        }
-      })
+        genInfo: {
+          duration: duration,
+          genre: genre,
+        },
+      }),
     })
       .then((response) => response.arrayBuffer())
       .then((response) => {
+        setIsLoading(false);
+        setPlaying(true);
         console.log(response);
-         setPath(response);
+        setPath(response);
         //  context.decodeAudioData(response, (buffer) => {
         //   source.buffer = buffer;
         //   source.connect(context.destination);
         //   // auto play
         //   source.start(0);
         // });
-        });
-      }
-    // const rIndex = Math.floor(Math.random() * Images.length);
-    // setPath(Images[rIndex]);
+      });
+  };
+  // const rIndex = Math.floor(Math.random() * Images.length);
+  // setPath(Images[rIndex]);
   // const [audio, setAudio] = useState<MediaStream | null>(null);
 
   // useEffect(() => {
@@ -99,17 +104,15 @@ function GenPage() {
     buttonRef = useRef(null);
 
   // const audioVisualizerLogic = () => {
-    
 
   //   // fetch remote audio source
-    
+
   //       // context.decodeAudioData(path, (buffer) => {
   //       //   source.buffer = buffer;
   //       //   source.connect(context.destination);
   //       //   // auto play
   //       //   source.start(0);
   //       // });
-      
 
   //   const audio = new Audio(source),
   //     canvas = canvasRef.current,
@@ -179,8 +182,6 @@ function GenPage() {
   //   audioVisualizerLogic();
   // }, []);
 
-
-
   return (
     <div
       style={{
@@ -218,14 +219,17 @@ function GenPage() {
                   <option value={0}>Classical</option>
                   <option value={1}>Lo-fi Hip Hop</option>
                   <option value={2}>Jazz</option>
-                  
                 </select>
               </div>
               <div>
                 <div style={{ marginBottom: "1rem" }}>
                   Enter Duration of music in Seconds
                 </div>
-                <input onChange={(e) => onValueChange(e)} type="number" max={100} />
+                <input
+                  onChange={(e) => onValueChange(e)}
+                  type="number"
+                  max={100}
+                />
               </div>
             </div>
             <div
@@ -244,7 +248,9 @@ function GenPage() {
                   flexDirection: "row",
                 }}
               >
-                <button onClick={getRImage}>Generate</button>
+                <button onClick={getRImage} disabled={isLoading}>
+                  Generate
+                </button>
                 <button
                   className="contextButton"
                   ref={buttonRef}
@@ -256,6 +262,9 @@ function GenPage() {
             </div>
           </div>
         )}
+
+        {isLoading && <LoadingScreen />}
+
         {playing && (
           <div>
             <div
@@ -283,6 +292,7 @@ function GenPage() {
                 <button
                   onClick={getRImage}
                   style={{ marginTop: "1.5rem", marginRight: "2rem" }}
+                  disabled={isLoading}
                 >
                   Generate
                 </button>
@@ -318,67 +328,64 @@ function GenPage() {
 
 export default GenPage;
 
+//test
+//   const canvasRef = useRef(null);
+//   const buttonRef = useRef(null);
+//   const audioVisualizerLogic = () => {
+//   const context = new (window.AudioContext || window.webkitAudioContext)();
+//   const canvas = canvasRef.current;
+//   const muteButton = buttonRef.current;
+//   const ctx = canvas.getContext("2d");
 
+//   // MIDI.js is a library for working with MIDI files
+//   // You can install it via npm or include it in your HTML
+//   const MIDI = require("midi.js");
 
+//   // Load the MIDI file from a local path
+//   MIDI.Player.loadFile("./assets/midi/103.midi", function() {
+//     // When the MIDI file is loaded, set up the audio visualization logic
+//     const analyser = context.createAnalyser();
+//     analyser.connect(context.destination);
+//     analyser.fftSize = 256;
+//     const bufferLength = analyser.frequencyBinCount;
+//     const dataArray = new Uint8Array(bufferLength);
+//     const WIDTH = canvas.width;
+//     const HEIGHT = canvas.height;
+//     const barWidth = (WIDTH / bufferLength) * 2.5;
+//     let x = null;
 
-  //test
-  //   const canvasRef = useRef(null);
-  //   const buttonRef = useRef(null);
-  //   const audioVisualizerLogic = () => {
-  //   const context = new (window.AudioContext || window.webkitAudioContext)();
-  //   const canvas = canvasRef.current;
-  //   const muteButton = buttonRef.current;
-  //   const ctx = canvas.getContext("2d");
+//     const renderFrame = () => {
+//       ctx.fillStyle = "rgba(0, 0, 0, 0)";
+//       requestAnimationFrame(renderFrame);
+//       x = 0;
+//       analyser.getByteFrequencyData(dataArray);
+//       ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-  //   // MIDI.js is a library for working with MIDI files
-  //   // You can install it via npm or include it in your HTML
-  //   const MIDI = require("midi.js");
+//       for (let i = 0; i < bufferLength; i++) {
+//         // Color based upon frequency
+//         const barHeight = dataArray[i];
+//         const r = barHeight + 22 * (i / bufferLength);
+//         const g = 333 * (i / bufferLength);
+//         const b = 47;
+//         ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
+//         ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
+//         x += barWidth + 1;
+//       }
+//     };
 
-  //   // Load the MIDI file from a local path
-  //   MIDI.Player.loadFile("./assets/midi/103.midi", function() {
-  //     // When the MIDI file is loaded, set up the audio visualization logic
-  //     const analyser = context.createAnalyser();
-  //     analyser.connect(context.destination);
-  //     analyser.fftSize = 256;
-  //     const bufferLength = analyser.frequencyBinCount;
-  //     const dataArray = new Uint8Array(bufferLength);
-  //     const WIDTH = canvas.width;
-  //     const HEIGHT = canvas.height;
-  //     const barWidth = (WIDTH / bufferLength) * 2.5;
-  //     let x = null;
+//     renderFrame();
 
-  //     const renderFrame = () => {
-  //       ctx.fillStyle = "rgba(0, 0, 0, 0)";
-  //       requestAnimationFrame(renderFrame);
-  //       x = 0;
-  //       analyser.getByteFrequencyData(dataArray);
-  //       ctx.fillRect(0, 0, WIDTH, HEIGHT);
+//     // When you click the button, start or stop MIDI playback
+//     muteButton.onclick = () => {
+//       if (MIDI.Player.playing) {
+//         MIDI.Player.stop();
+//       } else {
+//         MIDI.Player.start();
+//       }
+//     };
+//   });
+// };
 
-  //       for (let i = 0; i < bufferLength; i++) {
-  //         // Color based upon frequency
-  //         const barHeight = dataArray[i];
-  //         const r = barHeight + 22 * (i / bufferLength);
-  //         const g = 333 * (i / bufferLength);
-  //         const b = 47;
-  //         ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
-  //         ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
-  //         x += barWidth + 1;
-  //       }
-  //     };
-
-  //     renderFrame();
-
-  //     // When you click the button, start or stop MIDI playback
-  //     muteButton.onclick = () => {
-  //       if (MIDI.Player.playing) {
-  //         MIDI.Player.stop();
-  //       } else {
-  //         MIDI.Player.start();
-  //       }
-  //     };
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   audioVisualizerLogic();
-  // }, []);
+// useEffect(() => {
+//   audioVisualizerLogic();
+// }, []);
