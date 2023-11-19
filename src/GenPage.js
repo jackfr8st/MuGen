@@ -23,6 +23,11 @@ import path12 from "./assets/midi/12.wav";
 import path13 from "./assets/midi/13.wav";
 import midipath from "./assets/midi/103.midi";
 
+import classicalimg from "./assets/classical.jpg";
+import lofiimg from "./assets/LOFI.jpg";
+import jazzimg from "./assets/jazzimg.jpeg";
+
+
 const context = new (window.AudioContext || window.webkitAudioContext)(),
   source = context.createBufferSource();
 
@@ -30,6 +35,12 @@ function GenPage() {
   const [playing, setPlaying] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false); //loading spinner states
+  const [bwidth, setBwidth] = useState(false);
+  const [bowidth, setBowidth] = useState(false);
+  const [borwidth, setBorwidth] = useState(false);
+
+  const [test,setTest] =useState(0);
+
 
   const togglePlay = () => {
     setIsPlaying(!isPlaying);
@@ -54,11 +65,44 @@ function GenPage() {
   const [path, setPath] = useState("");
   const [genre, setGenre] = useState(0);
   const [duration, setDuration] = useState(10);
+  const [blob, setBlob] = useState();
+  const visualizerRef = useRef(null)
 
   const onValueChange = (e) => {
     setDuration(e.target.value);
     console.log(duration);
   };
+
+  const handleClassical = () => {
+    setGenre(0);
+    setBwidth(true);
+    setBowidth(false);
+    setBorwidth(false);
+    console.log("clicked")
+  }
+  let toggleClassical = bwidth ? ' active':"";
+
+  const handleLofi = () => {
+    setGenre(1);
+    setBwidth(false);
+    setBowidth(true);
+    setBorwidth(false);
+    console.log("clicked")
+  }
+  let toggleLofi = bowidth ? ' active':"";
+
+  const handleJazz = () => {
+    setGenre(2);
+    setBwidth(false);
+    setBowidth(false);
+    setBorwidth(true);
+    console.log("clicked")
+  }
+  let toggleJazz = borwidth ? ' active':"";
+
+  const checkPlay = () => {
+    setTest(1);
+  }
 
   const getRImage = () => {
     setIsLoading(true);
@@ -78,6 +122,9 @@ function GenPage() {
         setPath(response);
         setIsLoading(false);
         console.log(response);
+        const blobb = new Blob([path], { type: 'audio/midi' });
+        setBlob(blobb);
+
         // setPlaying(2);
         //  context.decodeAudioData(response, (buffer) => {
         //   source.buffer = buffer;
@@ -104,15 +151,23 @@ function GenPage() {
     buttonRef = useRef(null);
 
   // const audioVisualizerLogic = () => {
-
-  //   // fetch remote audio source
-
-  //       // context.decodeAudioData(path, (buffer) => {
-  //       //   source.buffer = buffer;
-  //       //   source.connect(context.destination);
-  //       //   // auto play
-  //       //   source.start(0);
-  //       // });
+  //   if(test==1)
+  //   {// fetch remote audio source
+  //   const 
+  //     context = new (window.AudioContext || window.webkitAudioContext)(),
+  //     source = context.createBufferSource();
+    
+  //   //fetch remote audio source
+  //   fetch("https://jplayer.org/audio/mp3/RioMez-01-Sleep_together.mp3")
+  //     .then((response) => response.arrayBuffer())
+  //     .then((response) => {
+  //       context.decodeAudioData(response, (buffer) => {
+  //         source.buffer = buffer;
+  //         source.connect(context.destination);
+  //         // auto play
+  //         source.start(0);
+  //       });
+  //     });
 
   //   const audio = new Audio(source),
   //     canvas = canvasRef.current,
@@ -174,13 +229,32 @@ function GenPage() {
   //       return clearTimeout(timeouts[i]);
   //     }
   //   }, 51);
-  //   renderFrame();
+  //   renderFrame();}
   // };
 
   // //connect audio visualizer to DOM and execute logic
   // useEffect(() => {
   //   audioVisualizerLogic();
   // }, []);
+
+  const saveMidiFile = () => {
+
+    // Convert array buffer to blob
+    const blob = new Blob([path], { type: 'audio/midi' });
+
+    // Create a download link
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'output.mid'; // Change the file name if needed
+    document.body.appendChild(a);
+
+    // Trigger a click to download the file
+    a.click();
+
+    // Remove the link from the DOM
+    document.body.removeChild(a);
+  };
 
   return (
     <div
@@ -211,7 +285,7 @@ function GenPage() {
               Generate Music
             </div>
             <div style={{ padding: "1rem" }}>
-              <div style={{ marginBottom: "1rem" }}>
+              {/* <div style={{ marginBottom: "1rem" }}>
                 <select
                   style={{
                     fontSize: "1rem",
@@ -224,6 +298,20 @@ function GenPage() {
                   <option value={1}>Lo-fi Hip Hop</option>
                   <option value={2}>Jazz</option>
                 </select>
+              </div> */}
+              <div style={{display:'flex',justifyContent:'center',alignItems:'center',columnGap:'1rem'}}>
+                <div className={`cltile${toggleClassical}`} onClick={handleClassical} >
+                  <img src={classicalimg} style={{width:120,height:130,borderRadius:20,marginBottom:'1rem'}} />
+                  <div>Classical</div>
+                </div>
+                <div className={`lotile${toggleLofi}`} onClick={handleLofi} >
+                  <img src={lofiimg} style={{width:120,height:130,borderRadius:20,marginBottom:'1rem'}} />
+                  <div>Lo-fi</div>
+                </div>
+                <div className={`jatile${toggleJazz}`} onClick={handleJazz} >
+                  <img src={jazzimg} style={{width:120,height:130,borderRadius:20,marginBottom:'1rem'}} />
+                  <div>Jazz</div>
+                </div>
               </div>
               {/* <div>
                 <div style={{ marginBottom: "1rem" }}>
@@ -288,7 +376,8 @@ function GenPage() {
                 {isPlaying ? "Pause" : "Play"}
               </button> */}
               {/* <AudioPlayer src={midipath} autoPlay={isPlaying} controls style={{backgroundColor:'black'}} /> */}
-              <MidiPlayer data={path} />
+              <MidiPlayer data={path}/>
+              
 
               <div
                 style={{
@@ -306,17 +395,19 @@ function GenPage() {
                 </button>
                 <button
                   className="contextButton"
-                  ref={buttonRef}
                   style={{ marginTop: "1.5rem" }}
+                  onClick={saveMidiFile}
                 >
-                  Play Music
+                  Download
                 </button>
               </div>
             </div>
           </div>
         )}
       </div>
+      {/* <button  ref={buttonRef}>Play</button> */}
       <canvas ref={canvasRef} className="canvas"></canvas>
+      
       {/* <Visualizer audio={audio}>
         {({ canvasRef, stop, start, reset }) => (
           <>
@@ -336,64 +427,3 @@ function GenPage() {
 
 export default GenPage;
 
-//test
-//   const canvasRef = useRef(null);
-//   const buttonRef = useRef(null);
-//   const audioVisualizerLogic = () => {
-//   const context = new (window.AudioContext || window.webkitAudioContext)();
-//   const canvas = canvasRef.current;
-//   const muteButton = buttonRef.current;
-//   const ctx = canvas.getContext("2d");
-
-//   // MIDI.js is a library for working with MIDI files
-//   // You can install it via npm or include it in your HTML
-//   const MIDI = require("midi.js");
-
-//   // Load the MIDI file from a local path
-//   MIDI.Player.loadFile("./assets/midi/103.midi", function() {
-//     // When the MIDI file is loaded, set up the audio visualization logic
-//     const analyser = context.createAnalyser();
-//     analyser.connect(context.destination);
-//     analyser.fftSize = 256;
-//     const bufferLength = analyser.frequencyBinCount;
-//     const dataArray = new Uint8Array(bufferLength);
-//     const WIDTH = canvas.width;
-//     const HEIGHT = canvas.height;
-//     const barWidth = (WIDTH / bufferLength) * 2.5;
-//     let x = null;
-
-//     const renderFrame = () => {
-//       ctx.fillStyle = "rgba(0, 0, 0, 0)";
-//       requestAnimationFrame(renderFrame);
-//       x = 0;
-//       analyser.getByteFrequencyData(dataArray);
-//       ctx.fillRect(0, 0, WIDTH, HEIGHT);
-
-//       for (let i = 0; i < bufferLength; i++) {
-//         // Color based upon frequency
-//         const barHeight = dataArray[i];
-//         const r = barHeight + 22 * (i / bufferLength);
-//         const g = 333 * (i / bufferLength);
-//         const b = 47;
-//         ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
-//         ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
-//         x += barWidth + 1;
-//       }
-//     };
-
-//     renderFrame();
-
-//     // When you click the button, start or stop MIDI playback
-//     muteButton.onclick = () => {
-//       if (MIDI.Player.playing) {
-//         MIDI.Player.stop();
-//       } else {
-//         MIDI.Player.start();
-//       }
-//     };
-//   });
-// };
-
-// useEffect(() => {
-//   audioVisualizerLogic();
-// }, []);
