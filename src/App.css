@@ -37,12 +37,12 @@
   }
 }
 
-body{
+body {
   background-color: #020918;
 }
 
-button{
-  background-color: #1B2430;
+button {
+  background-color: #1b2430;
   border-radius: 10px;
   color: #816797;
   padding: 0.5rem;
@@ -50,6 +50,7 @@ button{
   border-width: 4px;
   box-shadow: none;
   font-weight: bold;
+  cursor: pointer;
 }
 
 .canvas {
@@ -59,76 +60,76 @@ button{
   z-index: -1;
 }
 
-.cltile{
-  cursor:pointer;
-  background-color:#020918;
-  width:150px;
-  height:200px;
-  border-radius:20px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-  border-color:#816797;
+.cltile {
+  cursor: pointer;
+  background-color: #020918;
+  width: 150px;
+  height: 200px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-color: #816797;
   transition: 500ms;
 }
 
-.cltile:hover{
+.cltile:hover {
   border: 1px solid;
   padding: 5px;
   background-color: #340a57;
 }
-.cltile.active{
+.cltile.active {
   border: 1px solid;
   padding: 5px;
   background-color: #340a57;
 }
 
-.lotile{
-  cursor:pointer;
-  background-color:#020918;
-  width:150px;
-  height:200px;
-  border-radius:20px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-  border-color:#816797;
+.lotile {
+  cursor: pointer;
+  background-color: #020918;
+  width: 150px;
+  height: 200px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-color: #816797;
   transition: 500ms;
 }
 
-.lotile:hover{
+.lotile:hover {
   border: 1px solid;
   padding: 5px;
   background-color: #340a57;
 }
-.lotile.active{
+.lotile.active {
   border: 1px solid;
   padding: 5px;
   background-color: #340a57;
 }
 
-.jatile{
-  cursor:pointer;
-  background-color:#020918;
-  width:150px;
-  height:200px;
-  border-radius:20px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-  border-color:#816797;
+.jatile {
+  cursor: pointer;
+  background-color: #020918;
+  width: 150px;
+  height: 200px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-color: #816797;
   transition: 500ms;
 }
 
-.jatile:hover{
+.jatile:hover {
   border: 1px solid;
   padding: 5px;
   background-color: #340a57;
 }
-.jatile.active{
+.jatile.active {
   border: 1px solid;
   padding: 5px;
   background-color: #340a57;

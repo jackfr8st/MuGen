@@ -7,6 +7,7 @@ import logo from "./assets/MuGen-logo.png";
 import bg1 from "./assets/bg1.jpg";
 import bg2 from "./assets/bg2.jpg";
 import robot from "./assets/robot.png";
+import gans from "./assets/GANs.png";
 import { Parallax, ParallaxLayer } from "@react-spring/parallax";
 
 function LandingPage() {
@@ -24,6 +25,16 @@ function LandingPage() {
               padding: "1rem",
             }}
           >
+            <button
+              onClick={() => navigate("/info")}
+              style={{
+                display: "block",
+                cursor: "pointer",
+                marginRight: "1rem",
+              }}
+            >
+              Learn More..
+            </button>
             <button onClick={() => navigate("/login")}>Signin</button>
           </div>
         </ParallaxLayer>
@@ -112,7 +123,7 @@ function LandingPage() {
               marginTop: "3rem",
             }}
           >
-            <div style={{ marginTop: "3rem", marginLeft: "9rem" }}>
+            <div style={{ marginTop: "3rem", marginLeft: "3rem" }}>
               <img src={robot} />
             </div>
           </div>
@@ -161,15 +172,26 @@ function LandingPage() {
                 How does Mugen Work?
               </div>
               <div>
-                Central to MuGen's innovative approach is the transformation of
-                audio data into spectrogram images. This paradigm shift in music
-                representation involves segmenting audio into short time
-                intervals, applying the Fast Fourier Transform (FFT) to extract
-                spectral information, and mapping the resulting spectra to a
-                visual format. The resulting spectrogram images encapsulate the
-                essence of music in a novel visual medium, opening up a world of
-                possibilities for creative exploration.
+                It is primarily composed of two integral components: the
+                Generator and the Discriminator.The Generator remains at the
+                core of our music composition process, responsible for creating
+                music samples. It's a deep neural network that takes random
+                noise as input and generates musical sequences as output.
+                <img
+                  src={gans}
+                  style={{
+                    margin: "2rem auto",
+                    display: "block",
+                    height: "20rem",
+                  }}
+                />
+                The Discriminator continues to act as the Generator's adversary,
+                assessing the authenticity of the music produced.Through
+                adversarial training, it facilitates the Generator in creating
+                music that becomes progressively more indistinguishable from
+                human compositions.
               </div>
+              <></>
             </div>
           </div>
         </ParallaxLayer>
