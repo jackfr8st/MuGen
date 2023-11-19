@@ -177,6 +177,7 @@ function LandingPage() {
                 core of our music composition process, responsible for creating
                 music samples. It's a deep neural network that takes random
                 noise as input and generates musical sequences as output.
+                <br style={{ marginBottom: "0.5rem" }} />
                 {/* <img
                   src={gans}
                   style={{
@@ -185,11 +186,14 @@ function LandingPage() {
                     height: "17rem",
                   }}
                 /> */}
-                The Discriminator continues to act as the Generator's adversary,
-                assessing the authenticity of the music produced.Through
-                adversarial training, it facilitates the Generator in creating
-                music that becomes progressively more indistinguishable from
-                human compositions.
+                <div style={{ marginTop: "0.5rem" }}>
+                  {" "}
+                  Discriminator continues to act as the Generator's adversary,
+                  assessing the authenticity of the music produced.Through
+                  adversarial training, it facilitates the Generator in creating
+                  music that becomes progressively more indistinguishable from
+                  human compositions.
+                </div>
               </div>
               <></>
             </div>
