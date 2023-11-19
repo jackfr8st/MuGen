@@ -27,7 +27,6 @@ import classicalimg from "./assets/classical.jpg";
 import lofiimg from "./assets/LOFI.jpg";
 import jazzimg from "./assets/jazzimg.jpeg";
 
-
 const context = new (window.AudioContext || window.webkitAudioContext)(),
   source = context.createBufferSource();
 
@@ -39,8 +38,7 @@ function GenPage() {
   const [bowidth, setBowidth] = useState(false);
   const [borwidth, setBorwidth] = useState(false);
 
-  const [test,setTest] =useState(0);
-
+  const [test, setTest] = useState(0);
 
   const togglePlay = () => {
     setIsPlaying(!isPlaying);
@@ -66,7 +64,7 @@ function GenPage() {
   const [genre, setGenre] = useState(0);
   const [duration, setDuration] = useState(10);
   const [blob, setBlob] = useState();
-  const visualizerRef = useRef(null)
+  const visualizerRef = useRef(null);
 
   const onValueChange = (e) => {
     setDuration(e.target.value);
@@ -78,31 +76,31 @@ function GenPage() {
     setBwidth(true);
     setBowidth(false);
     setBorwidth(false);
-    console.log("clicked")
-  }
-  let toggleClassical = bwidth ? ' active':"";
+    console.log("clicked");
+  };
+  let toggleClassical = bwidth ? " active" : "";
 
   const handleLofi = () => {
     setGenre(1);
     setBwidth(false);
     setBowidth(true);
     setBorwidth(false);
-    console.log("clicked")
-  }
-  let toggleLofi = bowidth ? ' active':"";
+    console.log("clicked");
+  };
+  let toggleLofi = bowidth ? " active" : "";
 
   const handleJazz = () => {
     setGenre(2);
     setBwidth(false);
     setBowidth(false);
     setBorwidth(true);
-    console.log("clicked")
-  }
-  let toggleJazz = borwidth ? ' active':"";
+    console.log("clicked");
+  };
+  let toggleJazz = borwidth ? " active" : "";
 
   const checkPlay = () => {
     setTest(1);
-  }
+  };
 
   const getRImage = () => {
     setIsLoading(true);
@@ -122,7 +120,7 @@ function GenPage() {
         setPath(response);
         setIsLoading(false);
         console.log(response);
-        const blobb = new Blob([path], { type: 'audio/midi' });
+        const blobb = new Blob([path], { type: "audio/midi" });
         setBlob(blobb);
 
         // setPlaying(2);
@@ -153,10 +151,10 @@ function GenPage() {
   // const audioVisualizerLogic = () => {
   //   if(test==1)
   //   {// fetch remote audio source
-  //   const 
+  //   const
   //     context = new (window.AudioContext || window.webkitAudioContext)(),
   //     source = context.createBufferSource();
-    
+
   //   //fetch remote audio source
   //   fetch("https://jplayer.org/audio/mp3/RioMez-01-Sleep_together.mp3")
   //     .then((response) => response.arrayBuffer())
@@ -238,15 +236,14 @@ function GenPage() {
   // }, []);
 
   const saveMidiFile = () => {
-
     // Convert array buffer to blob
-    const blob = new Blob([path], { type: 'audio/midi' });
+    const blob = new Blob([path], { type: "audio/midi" });
 
     // Create a download link
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = 'output.mid'; // Change the file name if needed
+    a.download = "output.mid"; // Change the file name if needed
     document.body.appendChild(a);
 
     // Trigger a click to download the file
@@ -262,13 +259,25 @@ function GenPage() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        marginTop: "13rem",
+        marginTop: "8rem",
       }}
     >
-      {isLoading && <div style={{display:"flex",alignItems:'center',justifyContent:'center',backgroundColor:'rgba(0,0,0,0.7)',width:'100%',height:'120%',position:'absolute',zIndex:'5'}}>
+      {isLoading && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "rgba(0,0,0,0.7)",
+            width: "100%",
+            height: "120%",
+            position: "absolute",
+            zIndex: "5",
+          }}
+        >
           <LoadingScreen />
         </div>
-           }
+      )}
       <div
         style={{
           display: "flex",
@@ -279,7 +288,7 @@ function GenPage() {
           borderRadius: "2rem",
         }}
       >
-        {playing==0 && (
+        {playing == 0 && (
           <div>
             <div style={{ fontSize: "2rem", marginBottom: "1rem" }}>
               Generate Music
@@ -299,17 +308,51 @@ function GenPage() {
                   <option value={2}>Jazz</option>
                 </select>
               </div> */}
-              <div style={{display:'flex',justifyContent:'center',alignItems:'center',columnGap:'1rem'}}>
-                <div className={`cltile${toggleClassical}`} onClick={handleClassical} >
-                  <img src={classicalimg} style={{width:120,height:130,borderRadius:20,marginBottom:'1rem'}} />
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  columnGap: "1rem",
+                }}
+              >
+                <div
+                  className={`cltile${toggleClassical}`}
+                  onClick={handleClassical}
+                >
+                  <img
+                    src={classicalimg}
+                    style={{
+                      width: 120,
+                      height: 130,
+                      borderRadius: 20,
+                      marginBottom: "1rem",
+                    }}
+                  />
                   <div>Classical</div>
                 </div>
-                <div className={`lotile${toggleLofi}`} onClick={handleLofi} >
-                  <img src={lofiimg} style={{width:120,height:130,borderRadius:20,marginBottom:'1rem'}} />
+                <div className={`lotile${toggleLofi}`} onClick={handleLofi}>
+                  <img
+                    src={lofiimg}
+                    style={{
+                      width: 120,
+                      height: 130,
+                      borderRadius: 20,
+                      marginBottom: "1rem",
+                    }}
+                  />
                   <div>Lo-fi</div>
                 </div>
-                <div className={`jatile${toggleJazz}`} onClick={handleJazz} >
-                  <img src={jazzimg} style={{width:120,height:130,borderRadius:20,marginBottom:'1rem'}} />
+                <div className={`jatile${toggleJazz}`} onClick={handleJazz}>
+                  <img
+                    src={jazzimg}
+                    style={{
+                      width: 120,
+                      height: 130,
+                      borderRadius: 20,
+                      marginBottom: "1rem",
+                    }}
+                  />
                   <div>Jazz</div>
                 </div>
               </div>
@@ -354,14 +397,13 @@ function GenPage() {
             </div>
           </div>
         )}
-{/* 
+        {/* 
         {playing==2 && <div style={{display:"flex",alignItems:'center',justifyContent:'center'}}>
           <LoadingScreen />
         </div>
            } */}
-          
 
-        {playing==2 && (
+        {playing == 2 && (
           <div>
             <div
               style={{
@@ -376,8 +418,7 @@ function GenPage() {
                 {isPlaying ? "Pause" : "Play"}
               </button> */}
               {/* <AudioPlayer src={midipath} autoPlay={isPlaying} controls style={{backgroundColor:'black'}} /> */}
-              <MidiPlayer data={path}/>
-              
+              <MidiPlayer data={path} />
 
               <div
                 style={{
@@ -407,7 +448,7 @@ function GenPage() {
       </div>
       {/* <button  ref={buttonRef}>Play</button> */}
       <canvas ref={canvasRef} className="canvas"></canvas>
-      
+
       {/* <Visualizer audio={audio}>
         {({ canvasRef, stop, start, reset }) => (
           <>
@@ -426,4 +467,3 @@ function GenPage() {
 }
 
 export default GenPage;
-

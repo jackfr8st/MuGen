@@ -182,7 +182,7 @@ function LandingPage() {
                   style={{
                     margin: "2rem auto",
                     display: "block",
-                    height: "20rem",
+                    height: "17rem",
                   }}
                 />
                 The Discriminator continues to act as the Generator's adversary,
