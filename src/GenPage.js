@@ -5,6 +5,7 @@ import { ReactDOM } from "react";
 import { Visualizer } from "react-sound-visualizer";
 import MidiPlayer from "react-midi-player";
 import LoadingScreen from "./LoadingScreen";
+import { Player } from 'video-react';
 
 import "./App.css";
 import AudioPlayer from "react-audio-player";
@@ -22,6 +23,7 @@ import path11 from "./assets/midi/11.wav";
 import path12 from "./assets/midi/12.wav";
 import path13 from "./assets/midi/13.wav";
 import midipath from "./assets/midi/103.midi";
+import Visual from './assets/audioViz1.mp4';
 
 import classicalimg from "./assets/classical.jpg";
 import lofiimg from "./assets/LOFI.jpg";
@@ -67,7 +69,7 @@ function GenPage() {
   const [duration, setDuration] = useState(10);
   const [blob, setBlob] = useState();
   const visualizerRef = useRef(null)
-
+  const videoRef = useRef();
   const onValueChange = (e) => {
     setDuration(e.target.value);
     console.log(duration);
@@ -101,7 +103,11 @@ function GenPage() {
   let toggleJazz = borwidth ? ' active':"";
 
   const checkPlay = () => {
-    setTest(1);
+    videoRef.current.play();
+  }
+
+  const checkPause = () => {
+    videoRef.current.pause();
   }
 
   const getRImage = () => {
@@ -376,7 +382,7 @@ function GenPage() {
                 {isPlaying ? "Pause" : "Play"}
               </button> */}
               {/* <AudioPlayer src={midipath} autoPlay={isPlaying} controls style={{backgroundColor:'black'}} /> */}
-              <MidiPlayer data={path}/>
+              <MidiPlayer data={path} onPlay={checkPlay} onResume={checkPlay} onPause={checkPause} onEnd={checkPause} />
               
 
               <div
@@ -406,7 +412,9 @@ function GenPage() {
         )}
       </div>
       {/* <button  ref={buttonRef}>Play</button> */}
-      <canvas ref={canvasRef} className="canvas"></canvas>
+
+      {playing==2 && <video src={Visual} ref={videoRef} className="canvas" loop={true} ></video>}
+      {/* <canvas ref={canvasRef} className="canvas"></canvas> */}
       
       {/* <Visualizer audio={audio}>
         {({ canvasRef, stop, start, reset }) => (

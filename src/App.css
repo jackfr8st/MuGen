@@ -54,9 +54,11 @@ button{
 
 .canvas {
   height: 130%;
-  width: 100.4%;
+  width: 100%;
   position: fixed;
+  margin-top: 55rem;
   z-index: -1;
+  background-color: #020918;
 }
 
 .cltile{
